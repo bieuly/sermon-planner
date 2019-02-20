@@ -1,14 +1,15 @@
 import React, { Component } from "react";
-import { Card } from "semantic-ui-react";
+import { Route } from "react-router";
 import "./App.css";
+import CreateSermonPage from "./pages/CreateSermonPage/CreateSermonPage";
+import HomePage from "./pages/HomePage/HomePage";
 
 class App extends Component {
   public render() {
     return (
       <div className="App">
-        <Card>
-          <Card.Content>Hello there</Card.Content>
-        </Card>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/createNewSermon" component={CreateSermonPage} />
       </div>
     );
   }
