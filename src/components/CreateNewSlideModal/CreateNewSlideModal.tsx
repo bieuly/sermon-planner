@@ -1,6 +1,16 @@
-import React, { SyntheticEvent, useState, FunctionComponent } from "react";
-import { Button, Dropdown, DropdownProps, Modal, Form, Label } from "semantic-ui-react";
+import React, { FunctionComponent, SyntheticEvent, useState } from "react";
+import ReactQuill from "react-quill";
+import {
+  Button,
+  Divider,
+  Dropdown,
+  DropdownProps,
+  Form,
+  Modal,
+  Segment,
+} from "semantic-ui-react";
 import { SlideTypes } from "../../models/Slide";
+import "./styles.css";
 
 export interface IProps {
   onCreateSlide: (slideType: SlideTypes) => void;
@@ -26,7 +36,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   const closeModal = () => {
     clearFields();
     setModalOpen(false);
-  }
+  };
 
   const closeCreateSlideMenu = (e: SyntheticEvent, data: any): void => {
     e.preventDefault();
@@ -36,21 +46,21 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   const handleCreateSlide = (e: SyntheticEvent, data: any): void => {
     e.preventDefault();
     if (isRequiredFieldsFilledOut()) {
-      const {selectedSlideType} = fields;
+      const { selectedSlideType } = fields;
       onCreateSlide(selectedSlideType as SlideTypes);
       closeModal();
     }
   };
 
   const clearFields = () => {
-    for(let field in fields) {
+    for (const field in fields) {
       fields[field as StateKeys] = null;
     }
-  }
+  };
 
   const isRequiredFieldsFilledOut = (): boolean => {
-    return !Object.values(fields).some((field) => !field);
-  }
+    return !Object.values(fields).some(field => !field);
+  };
 
   const slideTypeOnChange = (e: SyntheticEvent, data: DropdownProps): void => {
     e.preventDefault();
@@ -58,6 +68,19 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
       ...fields,
       selectedSlideType: data.value as SlideTypes,
     });
+  };
+
+  const renderSlideForm = () => {
+    const { selectedSlideType } = fields;
+    if (selectedSlideType === SlideTypes.BASIC) {
+      return (
+        <Form.Field>
+          <ReactQuill>
+            <div className="text-edit-area" />
+          </ReactQuill>
+        </Form.Field>
+      );
+    }
   };
 
   const slideTypeOptions = [
@@ -74,28 +97,38 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   return (
     <Form>
       <Modal
-      trigger={<Button onClick={showCreateSlideMenu} color="blue">Create New Slide</Button>}
-      open={modalOpen}
-      centered={false}
-      onClose={closeCreateSlideMenu}
+        trigger={
+          <Button onClick={showCreateSlideMenu} color="blue">
+            Create New Slide
+          </Button>
+        }
+        open={modalOpen}
+        centered={false}
+        onClose={closeCreateSlideMenu}
       >
         <Modal.Header>Create New Slide</Modal.Header>
         <Modal.Content>
           <Modal.Description>
             <p>What kind of Slide do you want to create?</p>
           </Modal.Description>
-          <Form.Field>
-            <Dropdown
-              onChange={slideTypeOnChange}
-              placeholder="Select Type"
-              options={slideTypeOptions}
-              selection
-            />
-          </Form.Field>
+          <Segment basic>
+            <Form.Field>
+              <Dropdown
+                onChange={slideTypeOnChange}
+                placeholder="Select Type"
+                options={slideTypeOptions}
+                selection
+              />
+            </Form.Field>
+            <Divider horizontal />
+            {renderSlideForm()}
+          </Segment>
         </Modal.Content>
         <Modal.Actions>
-            <Button onClick={handleCreateSlide} color="blue" active={false}>Create</Button>
-          </Modal.Actions>
+          <Button onClick={handleCreateSlide} color="blue" active={false}>
+            Create
+          </Button>
+        </Modal.Actions>
       </Modal>
     </Form>
   );
