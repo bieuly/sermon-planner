@@ -1,6 +1,4 @@
 import React, { FunctionComponent, useState } from "react";
-import { Card, Icon, SemanticICONS } from "semantic-ui-react";
-import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
 import CreateNewSlideModal from "../../components/CreateNewSlideModal/CreateNewSlideModal";
 import { ISlide, SlideTypes } from "../../models/Slide";
 import "./CreateSermonPage.css";
@@ -9,8 +7,7 @@ import SlidePreviewCard from "../../components/SlidePreviewCard/SlidePreviewCard
 const CreateSermonPage: FunctionComponent = () => {
   const [slides, setSlides] = useState<ISlide[]>([]);
 
-  const createSlide = (type: SlideTypes): void => {
-    const newSlide: ISlide = { type };
+  const createSlide = (newSlide: ISlide): void => {
     setSlides([...slides, newSlide]);
   };
 
@@ -18,15 +15,15 @@ const CreateSermonPage: FunctionComponent = () => {
     return (
       <ol className="slides-list">
         {slides.map((slide, i) => (
-          <li key={i}>{renderSlide(slide.type)}</li>
+          <li key={i}>{renderSlide(slide)}</li>
         ))}
       </ol>
     );
   };
 
-  const renderSlide = (slideType: SlideTypes) => {
+  const renderSlide = (slide: ISlide) => {
     const slideAppearance = (() => {
-      switch (slideType) {
+      switch (slide.type) {
         case SlideTypes.LYRICAL:
           return {
             color: "blue",
@@ -46,8 +43,9 @@ const CreateSermonPage: FunctionComponent = () => {
     })();
     const slideInfo = {
       ...slideAppearance,
-      slideType,
+      slide
     }
+    console.log(slide);
     return (
       <SlidePreviewCard {...slideInfo} />
     );

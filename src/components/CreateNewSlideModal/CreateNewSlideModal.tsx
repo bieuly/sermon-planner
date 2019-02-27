@@ -9,23 +9,41 @@ import {
   Modal,
   Segment,
 } from "semantic-ui-react";
-import { SlideTypes } from "../../models/Slide";
+import { SlideTypes, BasicSlide, ISlide, LyricalSlide } from "../../models/Slide";
 import "./styles.css";
+import BasicSlideForm from "../BasicSlideForm/BasicSlideForm";
 
 export interface IProps {
-  onCreateSlide: (slideType: SlideTypes) => void;
+  onCreateSlide: (newSlide: ISlide) => void;
 }
 
 export interface IState {
   selectedSlideType: SlideTypes | null;
+  slideInfo: ISlideInfo;
 }
 
 type StateKeys = keyof IState;
+
+interface ISlideInfo {
+  [SlideTypes.BASIC]: BasicSlide,
+  [SlideTypes.LYRICAL]: LyricalSlide, 
+}
+
+type SlideInfoKeys = keyof ISlideInfo
 
 const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [fields, setFields] = useState<IState>({
     selectedSlideType: null,
+    slideInfo: {
+      [SlideTypes.BASIC]: {
+        textContent: "",
+      },
+      [SlideTypes.LYRICAL]: {
+        numberOfSlides: 0,
+        lyrics: [],
+      }
+    }
   });
 
   const showCreateSlideMenu = (e: SyntheticEvent, data: any): void => {
@@ -38,7 +56,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
     setModalOpen(false);
   };
 
-  const closeCreateSlideMenu = (e: SyntheticEvent, data: any): void => {
+  const handleCloseCreateSlideMenu = (e: SyntheticEvent, data: any): void => {
     e.preventDefault();
     closeModal();
   };
@@ -46,11 +64,21 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   const handleCreateSlide = (e: SyntheticEvent, data: any): void => {
     e.preventDefault();
     if (isRequiredFieldsFilledOut()) {
-      const { selectedSlideType } = fields;
-      onCreateSlide(selectedSlideType as SlideTypes);
+      // cast as SlideType because we know it is not null at this point
+      const slideType = fields.selectedSlideType as SlideTypes
+      const newSlide = buildNewSlide(slideType);
+      onCreateSlide(newSlide);
       closeModal();
     }
   };
+
+  const buildNewSlide = (slideType: SlideTypes): ISlide => {
+    console.log(fields.slideInfo[slideType as SlideInfoKeys])
+    return {
+      type: slideType,
+      data: fields.slideInfo[slideType as SlideInfoKeys],
+    };
+  }
 
   const clearFields = () => {
     for (const field in fields) {
@@ -70,18 +98,31 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
     });
   };
 
+  const onBasicFormChange = (content: string): void => {
+    setFields({
+      ...fields,
+      slideInfo: {
+        ...fields.slideInfo,
+        [SlideTypes.BASIC]: {
+          textContent: content,
+        }        
+      }
+    })
+  }
+
   const renderSlideForm = () => {
     const { selectedSlideType } = fields;
     if (selectedSlideType === SlideTypes.BASIC) {
+      // return <BasicSlideForm onChange={onBasicFormChange}/>
       return (
-        <Form.Field>
-          <ReactQuill>
-            <div className="text-edit-area" />
-          </ReactQuill>
-        </Form.Field>
+        <ReactQuill onChange={handleOnChange}/>
       );
     }
   };
+
+  const handleOnChange = (content:any, delta:any, source:any, editor:any) => {
+    onBasicFormChange(editor.getHTML());
+  }
 
   const slideTypeOptions = [
     { key: 1, text: "Biblical", value: SlideTypes.BIBLEREF, icon: "book" },
@@ -104,7 +145,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
         }
         open={modalOpen}
         centered={false}
-        onClose={closeCreateSlideMenu}
+        onClose={handleCloseCreateSlideMenu}
       >
         <Modal.Header>Create New Slide</Modal.Header>
         <Modal.Content>
