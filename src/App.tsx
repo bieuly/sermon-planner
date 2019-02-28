@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
 import "./App.css";
-import CreateSermonPage from "./pages/CreateSermonPage/CreateSermonPage";
+import CreatePresentationPage from "./pages/CreatePresentationPage/CreatePresentationPage";
 import HomePage from "./pages/HomePage/HomePage";
 
 class App extends Component {
@@ -9,7 +9,10 @@ class App extends Component {
         return (
             <div className="App">
                 <Route exact path="/" component={HomePage} />
-                <Route path="/createNewSermon" component={CreateSermonPage} />
+                <Route
+                    path="/new-presentation"
+                    component={CreatePresentationPage}
+                />
             </div>
         );
     }

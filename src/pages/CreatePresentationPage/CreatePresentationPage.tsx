@@ -2,9 +2,9 @@ import React, { FunctionComponent, useState } from "react";
 import CreateNewSlideModal from "../../components/CreateNewSlideModal/CreateNewSlideModal";
 import SlidePreviewCard from "../../components/SlidePreviewCard/SlidePreviewCard";
 import { ISlide, SlideTypes } from "../../models/Slide";
-import "./CreateSermonPage.css";
+import "./styles.css";
 
-const CreateSermonPage: FunctionComponent = () => {
+const CreatePresentationPage: FunctionComponent = () => {
     const [slides, setSlides] = useState<ISlide[]>([]);
 
     const createSlide = (newSlide: ISlide): void => {
@@ -49,7 +49,7 @@ const CreateSermonPage: FunctionComponent = () => {
     };
 
     return (
-        <div className="create-sermon-page">
+        <div className="create-presentation-page">
             <div className="slides" />
             {renderSlides()}
             <CreateNewSlideModal onCreateSlide={createSlide} />
@@ -57,4 +57,4 @@ const CreateSermonPage: FunctionComponent = () => {
     );
 };
 
-export default CreateSermonPage;
+export default CreatePresentationPage;

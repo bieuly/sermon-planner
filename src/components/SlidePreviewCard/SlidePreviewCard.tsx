@@ -9,7 +9,7 @@ export interface IProps {
     slide: ISlide;
 }
 
-const SlidePreviewCard: FunctionComponent<Props> = ({
+const SlidePreviewCard: FunctionComponent<IProps> = ({
     iconName,
     color,
     slide,

@@ -4,9 +4,9 @@ class HomePage extends Component {
     public render() {
         return (
             <div className="home-page">
-                <h1>Sermon Planner</h1>
+                <h1>All Nations Church Presents</h1>
                 <div>
-                    <a href="/createNewSermon">Create New Sermon</a>
+                    <a href="/new-presentation">Create New Slides</a>
                 </div>
             </div>
         );

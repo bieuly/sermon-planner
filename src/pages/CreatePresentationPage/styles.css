@@ -1,0 +1,8 @@
+.create-presentation-page ol {
+    padding-inline-start: 0px;
+}
+
+.create-presentation-page li {
+    list-style-type: none;
+    margin: 0 0 10px 0;
+}
