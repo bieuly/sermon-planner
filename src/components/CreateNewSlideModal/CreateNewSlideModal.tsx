@@ -113,16 +113,9 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   const renderSlideForm = () => {
     const { selectedSlideType } = fields;
     if (selectedSlideType === SlideTypes.BASIC) {
-      // return <BasicSlideForm onChange={onBasicFormChange}/>
-      return (
-        <ReactQuill onChange={handleOnChange}/>
-      );
+      return (<BasicSlideForm onChange={onBasicFormChange}/>);
     }
   };
-
-  const handleOnChange = (content:any, delta:any, source:any, editor:any) => {
-    onBasicFormChange(editor.getHTML());
-  }
 
   const slideTypeOptions = [
     { key: 1, text: "Biblical", value: SlideTypes.BIBLEREF, icon: "book" },

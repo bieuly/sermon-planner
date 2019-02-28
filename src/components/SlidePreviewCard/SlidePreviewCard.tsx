@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { Card, Icon, SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import { SlideTypes, ISlide, BasicSlide } from '../../models/Slide';
+import { ISlide, BasicSlide } from '../../models/Slide';
+import "./styles.css"
 
 export interface Props {
     iconName: string;
@@ -13,9 +14,9 @@ const SlidePreviewCard: FunctionComponent<Props> = ({
     color,
     slide
 }) => (
-    <Card color={color as SemanticCOLORS}>
+    <Card className="slide-preview-card" color={color as SemanticCOLORS}>
         <Card.Content>
-          <Card.Description>
+          <Card.Description className="content">
             {slide.data ? <div dangerouslySetInnerHTML={{__html: (slide.data as BasicSlide).textContent}}></div> : `
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod,
               pariatur dignissimos optio laudantium officiis, modi est, dolore

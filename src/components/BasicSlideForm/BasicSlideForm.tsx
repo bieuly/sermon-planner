@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { Form } from "semantic-ui-react";
 import ReactQuill from "react-quill";
 
@@ -6,13 +6,13 @@ interface Props {
   onChange: any;
 }
 
-class BasicSlideForm extends Component<Props> {
+class BasicSlideForm extends PureComponent<Props> {
 
   public render() {
     return (
       <Form.Field>
         <ReactQuill modules={this.modules} formats={this.formats} onChange={this.handleOnChange}>
-          <div className="text-edit-area" />
+          {/* <div className="text-edit-area" /> */}
         </ReactQuill>
       </Form.Field>
     );
