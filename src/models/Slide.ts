@@ -6,11 +6,18 @@ export enum SlideTypes {
 
 export interface ISlide {
     type: SlideTypes;
-    data: IBasicSlide | ILyricalSlide;
+    data: IBasicSlide | ILyricalSlide | IBibleRefSlide | null;
 }
 
 export interface IBasicSlide {
     textContent: string;
+}
+
+export interface IBibleRefSlide {
+    book: string;
+    chapter: number;
+    verses: number[];
+    text: string;
 }
 
 export interface ILyricalSlide {

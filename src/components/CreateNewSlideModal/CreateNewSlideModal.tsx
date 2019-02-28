@@ -1,4 +1,9 @@
-import React, { FunctionComponent, SyntheticEvent, useState } from "react";
+import React, {
+    FunctionComponent,
+    ReactNode,
+    SyntheticEvent,
+    useState,
+} from "react";
 import {
     Button,
     Divider,
@@ -10,6 +15,7 @@ import {
 } from "semantic-ui-react";
 import {
     IBasicSlide,
+    IBibleRefSlide,
     ILyricalSlide,
     ISlide,
     SlideTypes,
@@ -18,7 +24,9 @@ import BasicSlideForm from "../BasicSlideForm/BasicSlideForm";
 import "./styles.css";
 
 export interface IProps {
+    isOpen: boolean;
     onCreateSlide: (newSlide: ISlide) => void;
+    setModalOpen: (display: boolean) => void;
 }
 
 export interface IState {
@@ -29,48 +37,36 @@ export interface IState {
 type StateKeys = keyof IState;
 
 interface ISlideInfo {
-    [SlideTypes.BASIC]: IBasicSlide;
-    [SlideTypes.LYRICAL]: ILyricalSlide;
+    [SlideTypes.BASIC]: IBasicSlide | null;
+    [SlideTypes.LYRICAL]: ILyricalSlide | null;
+    [SlideTypes.BIBLEREF]: IBibleRefSlide | null;
 }
 
 type SlideInfoKeys = keyof ISlideInfo;
 
-const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
-    const [modalOpen, setModalOpen] = useState(false);
+const CreateNewSlideModal: FunctionComponent<IProps> = ({
+    isOpen,
+    onCreateSlide,
+    setModalOpen,
+}) => {
     const [fields, setFields] = useState<IState>({
         selectedSlideType: null,
         slideInfo: {
-            [SlideTypes.BASIC]: {
-                textContent: "",
-            },
-            [SlideTypes.LYRICAL]: {
-                lyrics: [],
-                numberOfSlides: 0,
-            },
+            [SlideTypes.BASIC]: null,
+            [SlideTypes.LYRICAL]: null,
+            [SlideTypes.BIBLEREF]: null,
         },
     });
 
-    const showCreateSlideMenu = (e: SyntheticEvent, data: any): void => {
-        e.preventDefault();
-        setModalOpen(true);
-    };
-
-    const closeModal = () => {
+    const closeModal = (): void => {
         clearFields();
         setModalOpen(false);
     };
 
-    const handleCloseCreateSlideMenu = (e: SyntheticEvent, data: any): void => {
-        e.preventDefault();
-        closeModal();
-    };
-
-    const handleCreateSlide = (e: SyntheticEvent, data: any): void => {
-        e.preventDefault();
-        if (isRequiredFieldsFilledOut()) {
-            // cast as SlideType because we know it is not null at this point
-            const slideType = fields.selectedSlideType as SlideTypes;
-            const newSlide = buildNewSlide(slideType);
+    const handleCreateSlide = (): void => {
+        const { selectedSlideType } = fields;
+        if (selectedSlideType) {
+            const newSlide = buildNewSlide(selectedSlideType);
             onCreateSlide(newSlide);
             closeModal();
         }
@@ -83,16 +79,15 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
         };
     };
 
-    const clearFields = () => {
-        for (const field in fields) {
-            if (fields.hasOwnProperty(field)) {
-                fields[field as StateKeys] = null;
-            }
-        }
-    };
-
-    const isRequiredFieldsFilledOut = (): boolean => {
-        return !Object.values(fields).some((field) => !field);
+    const clearFields = (): void => {
+        setFields({
+            selectedSlideType: null,
+            slideInfo: {
+                [SlideTypes.BASIC]: null,
+                [SlideTypes.LYRICAL]: null,
+                [SlideTypes.BIBLEREF]: null,
+            },
+        });
     };
 
     const slideTypeOnChange = (
@@ -118,7 +113,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
         });
     };
 
-    const renderSlideForm = () => {
+    const renderSlideForm = (): ReactNode => {
         const { selectedSlideType } = fields;
         if (selectedSlideType === SlideTypes.BASIC) {
             return <BasicSlideForm onChange={onBasicFormChange} />;
@@ -140,14 +135,9 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
         <Form>
             <Modal
                 dimmer="blurring"
-                trigger={
-                    <Button onClick={showCreateSlideMenu} color="blue">
-                        Create New Slide
-                    </Button>
-                }
-                open={modalOpen}
+                open={isOpen}
                 centered={false}
-                onClose={handleCloseCreateSlideMenu}
+                onClose={closeModal}
             >
                 <Modal.Header>Create New Slide</Modal.Header>
                 <Modal.Content>
