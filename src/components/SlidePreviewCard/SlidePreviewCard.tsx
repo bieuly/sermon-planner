@@ -5,6 +5,7 @@ import "./styles.css";
 
 export interface IProps {
     slide: ISlide;
+    onPreviewSlideClick: (slideId: string) => void;
 }
 
 interface ISlideAppearance {
@@ -12,7 +13,10 @@ interface ISlideAppearance {
     iconName: SemanticICONS;
 }
 
-const SlidePreviewCard: FunctionComponent<IProps> = ({ slide }) => {
+const SlidePreviewCard: FunctionComponent<IProps> = ({
+    slide,
+    onPreviewSlideClick,
+}) => {
     const { color, iconName } = ((): ISlideAppearance => {
         switch (slide.type) {
             case SlideTypes.LYRICAL:
@@ -33,8 +37,16 @@ const SlidePreviewCard: FunctionComponent<IProps> = ({ slide }) => {
         }
     })();
 
+    const handleOnClick = () => {
+        onPreviewSlideClick(slide.id);
+    };
+
     return (
-        <Card className="slide-preview-card" color={color}>
+        <Card
+            className="slide-preview-card"
+            color={color}
+            onClick={handleOnClick}
+        >
             <Card.Content>
                 <Card.Description className="content">
                     {slide.data && (

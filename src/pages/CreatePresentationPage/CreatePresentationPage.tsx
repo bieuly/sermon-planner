@@ -1,12 +1,13 @@
 import React, { FunctionComponent, useState } from "react";
-import { Button, Header, Icon } from "semantic-ui-react";
+import { Button, Grid, Header, Icon } from "semantic-ui-react";
 import CreateNewSlideModal from "../../components/CreateNewSlideModal/CreateNewSlideModal";
 import SlidePreviewCard from "../../components/SlidePreviewCard/SlidePreviewCard";
-import { ISlide } from "../../models/Slide";
+import { IBasicSlide, ISlide, SlideTypes } from "../../models/Slide";
 import "./styles.css";
 
 const CreatePresentationPage: FunctionComponent = () => {
     const [slides, setSlides] = useState<ISlide[]>([]);
+    const [selectedSlideId, setSelectedSlideId] = useState<string | null>(null);
     const [isCreateSlideModalOpen, setCreateSlideModalOpen] = useState<boolean>(
         false
     );
@@ -15,15 +16,26 @@ const CreatePresentationPage: FunctionComponent = () => {
         setSlides([...slides, newSlide]);
     };
 
-    const onCreateSlideBtnClick = () => {
+    const onCreateSlideBtnClick = (): void => {
         setCreateSlideModalOpen(true);
+    };
+
+    const handlePreviewSlideClick = (slideId: string): void => {
+        setSelectedSlideId(slideId);
     };
 
     const renderSlides = () => {
         return (
             <ol className="slides-list">
-                {slides.map((slide, i) => (
-                    <li key={i}>{<SlidePreviewCard slide={slide} />}</li>
+                {slides.map((slide) => (
+                    <li key={slide.id}>
+                        {
+                            <SlidePreviewCard
+                                slide={slide}
+                                onPreviewSlideClick={handlePreviewSlideClick}
+                            />
+                        }
+                    </li>
                 ))}
             </ol>
         );
@@ -45,14 +57,41 @@ const CreatePresentationPage: FunctionComponent = () => {
         />
     );
 
+    const renderSelectedSlide = () => {
+        if (selectedSlideId) {
+            const selectedSlide = slides.find(
+                (slide) => slide.id === selectedSlideId
+            );
+            if (selectedSlide) {
+                if (selectedSlide.type === SlideTypes.BASIC) {
+                    return (
+                        <div
+                            className="ql-editor"
+                            dangerouslySetInnerHTML={{
+                                __html: (selectedSlide.data as IBasicSlide)
+                                    .textContent,
+                            }}
+                        />
+                    );
+                }
+            }
+        }
+    };
+
     return (
         <div className="create-presentation-page">
             {slides.length > 0 ? (
-                <div>
-                    <div className="slides" />
-                    {renderSlides()}
-                    {renderCreateNewSlideBtn()}
-                    {renderCreateNewSlideModal()}
+                <div className="slides">
+                    <Grid columns={2} divided>
+                        <Grid.Column width={6}>
+                            {renderSlides()}
+                            {renderCreateNewSlideBtn()}
+                            {renderCreateNewSlideModal()}
+                        </Grid.Column>
+                        <Grid.Column width={10}>
+                            {renderSelectedSlide()}
+                        </Grid.Column>
+                    </Grid>
                 </div>
             ) : (
                 <div className="no-slides-header">

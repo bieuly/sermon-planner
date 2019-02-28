@@ -14,11 +14,13 @@ class App extends Component {
                         <a href="/">ANC</a>
                     </header>
                 </Segment>
-                <Route exact path="/" component={HomePage} />
-                <Route
-                    path="/new-presentation"
-                    component={CreatePresentationPage}
-                />
+                <Segment vertical>
+                    <Route exact path="/" component={HomePage} />
+                    <Route
+                        path="/new-presentation"
+                        component={CreatePresentationPage}
+                    />
+                </Segment>
             </div>
         );
     }

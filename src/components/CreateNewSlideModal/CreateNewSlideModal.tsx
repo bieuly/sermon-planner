@@ -13,6 +13,7 @@ import {
     Modal,
     Segment,
 } from "semantic-ui-react";
+import uuid from "uuid/v4";
 import {
     IBasicSlide,
     IBibleRefSlide,
@@ -33,8 +34,6 @@ export interface IState {
     selectedSlideType: SlideTypes | null;
     slideInfo: ISlideInfo;
 }
-
-type StateKeys = keyof IState;
 
 interface ISlideInfo {
     [SlideTypes.BASIC]: IBasicSlide | null;
@@ -75,6 +74,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({
     const buildNewSlide = (slideType: SlideTypes): ISlide => {
         return {
             data: fields.slideInfo[slideType as SlideInfoKeys],
+            id: uuid(),
             type: slideType,
         };
     };

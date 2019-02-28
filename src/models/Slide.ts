@@ -5,6 +5,7 @@ export enum SlideTypes {
 }
 
 export interface ISlide {
+    id: string;
     type: SlideTypes;
     data: IBasicSlide | ILyricalSlide | IBibleRefSlide | null;
 }
