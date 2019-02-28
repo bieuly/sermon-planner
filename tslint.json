@@ -1,3 +1,7 @@
 {
-    "extends": "tslint:recommended"
+    "extends": "tslint:recommended",
+    "rules": {
+        "trailing-comma": [true, { "multiline": { "arguments": "never" } }],
+        "indent": [true, "spaces", 4]
+    }
 }

@@ -1,21 +1,19 @@
-import Quill from "quill";
-
 export enum SlideTypes {
-  LYRICAL = "Lyrical",
-  BIBLEREF = "Biblical",
-  BASIC = "Basic",
+    LYRICAL = "Lyrical",
+    BIBLEREF = "Biblical",
+    BASIC = "Basic",
 }
 
 export interface ISlide {
-  type: SlideTypes;
-  data: BasicSlide | LyricalSlide;
+    type: SlideTypes;
+    data: IBasicSlide | ILyricalSlide;
 }
 
-export interface BasicSlide {
-  textContent: string
+export interface IBasicSlide {
+    textContent: string;
 }
 
-export interface LyricalSlide {
-  numberOfSlides: number;
-  lyrics: string[];
+export interface ILyricalSlide {
+    numberOfSlides: number;
+    lyrics: string[];
 }

@@ -1,3 +1,6 @@
 {
-  "trailingComma": "es5"
+    "trailingComma": "es5",
+    "arrowParens": "always",
+    "useTabs": false,
+    "tabWidth": 4
 }
