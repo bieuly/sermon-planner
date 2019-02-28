@@ -131,6 +131,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({ onCreateSlide }) => {
   return (
     <Form>
       <Modal
+        dimmer="blurring"
         trigger={
           <Button onClick={showCreateSlideMenu} color="blue">
             Create New Slide
