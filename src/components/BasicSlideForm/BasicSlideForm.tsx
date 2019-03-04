@@ -1,41 +1,62 @@
-import React, { Component, PureComponent } from "react";
-import { Form } from "semantic-ui-react";
+// import * as Quill from "quill";
+import * as Quill from "quill";
+import React, { FunctionComponent } from "react";
 import ReactQuill from "react-quill";
+import { Form } from "semantic-ui-react";
 
-interface Props {
-  onChange: any;
+interface IProps {
+    onChange: (data: string) => void;
 }
 
-class BasicSlideForm extends PureComponent<Props> {
+const BasicSlideForm: FunctionComponent<IProps> = ({ onChange }) => {
+    const modules = {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ["bold", "italic", "underline"],
+            [
+                { list: "ordered" },
+                { list: "bullet" },
+                { indent: "-1" },
+                { indent: "+1" },
+                { align: ["", "right", "center"] },
+            ],
+            ["image"],
+        ],
+    };
 
-  public render() {
+    const formats = [
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "list",
+        "bullet",
+        "indent",
+        "image",
+        "align",
+    ];
+
+    const handleOnChange = (
+        content: string,
+        delta: any,
+        source: Quill.Sources,
+        // TODO: get type for UnpreviledgedEditor
+        editor: any
+    ) => {
+        onChange(editor.getHTML());
+    };
+
     return (
-      <Form.Field>
-        <ReactQuill modules={this.modules} formats={this.formats} onChange={this.handleOnChange}>
-          {/* <div className="text-edit-area" /> */}
-        </ReactQuill>
-      </Form.Field>
+        <Form.Field>
+            <ReactQuill
+                modules={modules}
+                formats={formats}
+                onChange={handleOnChange}
+            />
+            {/* // TODO: Find a workaround for the 'not in range error' */}
+            {/* <div className="text-edit-area" /> */}
+        </Form.Field>
     );
-  }
-
-  private handleOnChange = (content:any, delta:any, source:any, editor:any) => {
-    this.props.onChange(editor.getHTML());
-  }
-  private modules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline'],
-      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}, {'align': ['', 'right', 'center']}],
-      ['image'],
-    ],
-  };
-  
-  private formats = [
-    'header',
-    'bold', 'italic', 'underline',
-    'list', 'bullet', 'indent',
-    'image', 'align'
-  ];
-}
+};
 
 export default BasicSlideForm;
