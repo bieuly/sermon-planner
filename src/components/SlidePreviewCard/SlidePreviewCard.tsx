@@ -1,6 +1,11 @@
 import React, { FunctionComponent } from "react";
 import { Card, Icon, SemanticCOLORS, SemanticICONS } from "semantic-ui-react";
-import { IBasicSlide, ISlide, SlideTypes } from "../../models/Slide";
+import {
+    IBasicSlide,
+    ILyricalSlide,
+    ISlide,
+    SlideTypes,
+} from "../../models/Slide";
 import "./styles.css";
 
 export interface IProps {
@@ -37,6 +42,39 @@ const SlidePreviewCard: FunctionComponent<IProps> = ({
         }
     })();
 
+    const cardContent = (() => {
+        switch (slide.type) {
+            case SlideTypes.BASIC:
+                return (
+                    <Card.Content>
+                        <Card.Description className="content">
+                            {slide.data && (
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: (slide.data as IBasicSlide)
+                                            .textContent,
+                                    }}
+                                />
+                            )}
+                        </Card.Description>
+                    </Card.Content>
+                );
+            case SlideTypes.LYRICAL:
+                return (
+                    <Card.Content>
+                        <Card.Meta>
+                            Title:{" "}
+                            {slide.data && (slide.data as ILyricalSlide).title}
+                        </Card.Meta>
+                        <Card.Description className="content">
+                            {` Number of Slides: ${slide.data &&
+                                (slide.data as ILyricalSlide).lyrics.length}`}
+                        </Card.Description>
+                    </Card.Content>
+                );
+        }
+    })();
+
     const handleOnClick = () => {
         onPreviewSlideClick(slide.id);
     };
@@ -47,17 +85,7 @@ const SlidePreviewCard: FunctionComponent<IProps> = ({
             color={color}
             onClick={handleOnClick}
         >
-            <Card.Content>
-                <Card.Description className="content">
-                    {slide.data && (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: (slide.data as IBasicSlide).textContent,
-                            }}
-                        />
-                    )}
-                </Card.Description>
-            </Card.Content>
+            <Card.Content>{cardContent}</Card.Content>
             <Card.Content extra>
                 <Icon name={iconName} /> {slide.type}
             </Card.Content>

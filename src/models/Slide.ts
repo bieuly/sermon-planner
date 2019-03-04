@@ -22,6 +22,6 @@ export interface IBibleRefSlide {
 }
 
 export interface ILyricalSlide {
-    numberOfSlides: number;
+    title: string;
     lyrics: string[];
 }

@@ -22,6 +22,7 @@ import {
     SlideTypes,
 } from "../../models/Slide";
 import BasicSlideForm from "../BasicSlideForm/BasicSlideForm";
+import LyricalSlideForm from "../LyricalSlideForm/LyricalSlideForm";
 import "./styles.css";
 
 export interface IProps {
@@ -113,10 +114,28 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({
         });
     };
 
-    const renderSlideForm = (): ReactNode => {
+    const onLyricalFormChange = (title: string, lyrics: string[]): void => {
+        setFields({
+            ...fields,
+            slideInfo: {
+                ...fields.slideInfo,
+                [SlideTypes.LYRICAL]: {
+                    lyrics,
+                    title,
+                },
+            },
+        });
+    };
+
+    const renderSlideFields = (): ReactNode => {
         const { selectedSlideType } = fields;
-        if (selectedSlideType === SlideTypes.BASIC) {
-            return <BasicSlideForm onChange={onBasicFormChange} />;
+        if (selectedSlideType) {
+            switch (selectedSlideType) {
+                case SlideTypes.BASIC:
+                    return <BasicSlideForm onChange={onBasicFormChange} />;
+                case SlideTypes.LYRICAL:
+                    return <LyricalSlideForm onChange={onLyricalFormChange} />;
+            }
         }
     };
 
@@ -138,8 +157,10 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({
                 open={isOpen}
                 centered={false}
                 onClose={closeModal}
+                size="fullscreen"
             >
                 <Modal.Header>Create New Slide</Modal.Header>
+
                 <Modal.Content>
                     <Modal.Description>
                         <p>What kind of Slide do you want to create?</p>
@@ -154,7 +175,7 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({
                             />
                         </Form.Field>
                         <Divider horizontal />
-                        {renderSlideForm()}
+                        {renderSlideFields()}
                     </Segment>
                 </Modal.Content>
                 <Modal.Actions>

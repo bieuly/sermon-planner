@@ -1,8 +1,13 @@
 import React, { FunctionComponent, useState } from "react";
-import { Button, Grid, Header, Icon } from "semantic-ui-react";
+import { Button, Card, Grid, Header, Icon } from "semantic-ui-react";
 import CreateNewSlideModal from "../../components/CreateNewSlideModal/CreateNewSlideModal";
 import SlidePreviewCard from "../../components/SlidePreviewCard/SlidePreviewCard";
-import { IBasicSlide, ISlide, SlideTypes } from "../../models/Slide";
+import {
+    IBasicSlide,
+    ILyricalSlide,
+    ISlide,
+    SlideTypes,
+} from "../../models/Slide";
 import "./styles.css";
 
 const CreatePresentationPage: FunctionComponent = () => {
@@ -63,16 +68,53 @@ const CreatePresentationPage: FunctionComponent = () => {
                 (slide) => slide.id === selectedSlideId
             );
             if (selectedSlide) {
-                if (selectedSlide.type === SlideTypes.BASIC) {
-                    return (
-                        <div
-                            className="ql-editor"
-                            dangerouslySetInnerHTML={{
-                                __html: (selectedSlide.data as IBasicSlide)
-                                    .textContent,
-                            }}
-                        />
-                    );
+                switch (selectedSlide.type) {
+                    case SlideTypes.BASIC:
+                        return (
+                            <div
+                                className="ql-editor"
+                                dangerouslySetInnerHTML={{
+                                    __html: (selectedSlide.data as IBasicSlide)
+                                        .textContent,
+                                }}
+                            />
+                        );
+                    case SlideTypes.LYRICAL:
+                        return (
+                            <div>
+                                {(selectedSlide.data as ILyricalSlide).lyrics.map(
+                                    (lyric) => {
+                                        const cardDescription = (() => {
+                                            const lines = lyric.split("\n");
+                                            if (lines.length > 0) {
+                                                return lines.map((line, i) => {
+                                                    return (
+                                                        <Card.Description
+                                                            key={i}
+                                                        >
+                                                            {line}
+                                                        </Card.Description>
+                                                    );
+                                                });
+                                            } else {
+                                                return (
+                                                    <Card.Description>
+                                                        {lyric}
+                                                    </Card.Description>
+                                                );
+                                            }
+                                        })();
+                                        return (
+                                            <Card>
+                                                <Card.Content textAlign="center">
+                                                    {cardDescription}
+                                                </Card.Content>
+                                            </Card>
+                                        );
+                                    }
+                                )}
+                            </div>
+                        );
                 }
             }
         }
