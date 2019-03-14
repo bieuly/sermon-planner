@@ -3,9 +3,11 @@ import * as Quill from "quill";
 import React, { FunctionComponent } from "react";
 import ReactQuill from "react-quill";
 import { Form } from "semantic-ui-react";
+import { SlideTypes } from "../../models/Slide";
+import { ISlideFormData } from "../CreateNewSlideModal/CreateNewSlideModal";
 
 interface IProps {
-    onChange: (data: string) => void;
+    onChange: (slideFormData: ISlideFormData) => void;
 }
 
 const BasicSlideForm: FunctionComponent<IProps> = ({ onChange }) => {
@@ -43,7 +45,12 @@ const BasicSlideForm: FunctionComponent<IProps> = ({ onChange }) => {
         // TODO: get type for UnpreviledgedEditor
         editor: any
     ) => {
-        onChange(editor.getHTML());
+        onChange({
+            data: {
+                textContent: editor.getHTML(),
+            },
+            slideType: SlideTypes.BASIC,
+        });
     };
 
     return (

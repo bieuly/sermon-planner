@@ -19,6 +19,7 @@ import {
     IBibleRefSlide,
     ILyricalSlide,
     ISlide,
+    SlideData,
     SlideTypes,
 } from "../../models/Slide";
 import BasicSlideForm from "../BasicSlideForm/BasicSlideForm";
@@ -40,6 +41,11 @@ interface ISlideInfo {
     [SlideTypes.BASIC]: IBasicSlide | null;
     [SlideTypes.LYRICAL]: ILyricalSlide | null;
     [SlideTypes.BIBLEREF]: IBibleRefSlide | null;
+}
+
+export interface ISlideFormData {
+    slideType: SlideTypes;
+    data: SlideData;
 }
 
 type SlideInfoKeys = keyof ISlideInfo;
@@ -102,27 +108,12 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({
         });
     };
 
-    const onBasicFormChange = (content: string): void => {
+    const onFormChange = (slideFormData: ISlideFormData): void => {
         setFields({
             ...fields,
             slideInfo: {
                 ...fields.slideInfo,
-                [SlideTypes.BASIC]: {
-                    textContent: content,
-                },
-            },
-        });
-    };
-
-    const onLyricalFormChange = (title: string, lyrics: string[]): void => {
-        setFields({
-            ...fields,
-            slideInfo: {
-                ...fields.slideInfo,
-                [SlideTypes.LYRICAL]: {
-                    lyrics,
-                    title,
-                },
+                [slideFormData.slideType]: slideFormData.data,
             },
         });
     };
@@ -132,9 +123,9 @@ const CreateNewSlideModal: FunctionComponent<IProps> = ({
         if (selectedSlideType) {
             switch (selectedSlideType) {
                 case SlideTypes.BASIC:
-                    return <BasicSlideForm onChange={onBasicFormChange} />;
+                    return <BasicSlideForm onChange={onFormChange} />;
                 case SlideTypes.LYRICAL:
-                    return <LyricalSlideForm onChange={onLyricalFormChange} />;
+                    return <LyricalSlideForm onChange={onFormChange} />;
             }
         }
     };

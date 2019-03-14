@@ -9,9 +9,11 @@ import {
     TextArea,
     TextAreaProps,
 } from "semantic-ui-react";
+import { SlideTypes } from "../../models/Slide";
+import { ISlideFormData } from "../CreateNewSlideModal/CreateNewSlideModal";
 
 interface IProps {
-    onChange: (title: string, lyrics: string[]) => void;
+    onChange: (slideFormData: ISlideFormData) => void;
 }
 
 const LyricalSlideForm: FunctionComponent<IProps> = ({ onChange }) => {
@@ -24,7 +26,13 @@ const LyricalSlideForm: FunctionComponent<IProps> = ({ onChange }) => {
     ) => {
         const splitLyrics = (data.value as string).split("\n\n");
         setLyrics(splitLyrics);
-        onChange(title, splitLyrics);
+        onChange({
+            data: {
+                lyrics: splitLyrics,
+                title,
+            },
+            slideType: SlideTypes.LYRICAL,
+        });
     };
 
     const handleTitleOnChange = (

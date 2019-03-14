@@ -10,6 +10,8 @@ export interface ISlide {
     data: IBasicSlide | ILyricalSlide | IBibleRefSlide | null;
 }
 
+export type SlideData = IBasicSlide | IBibleRefSlide | ILyricalSlide;
+
 export interface IBasicSlide {
     textContent: string;
 }
